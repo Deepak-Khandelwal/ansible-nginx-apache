@@ -1,0 +1,16 @@
+---
+- name: Configure Nginx
+  become: true
+  become_method: sudo
+  hosts: web
+  roles:
+   - role: 'ansible-nginx'
+  tasks:
+   - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']
+
+- name: Configure apache
+  become: true
+  become_method: sudo
+  hosts: app
+  roles:
+   - role: 'ansible-apache'

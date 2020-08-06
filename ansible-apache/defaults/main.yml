@@ -1,0 +1,25 @@
+---
+# defaults file for ansible-apache
+apache_listen_ip: "*"
+apache_listen_port: 80
+
+apache_remove_default_vhost: false
+
+apache_global_vhost_settings: |
+  DirectoryIndex index.php index.html
+
+apache_allow_override: "All"
+apache_options: "-Indexes +FollowSymLinks"
+
+apache_state: started
+
+apache_packages_state: present
+
+clickjacking: "Header always append X-Frame-Options SAMEORIGIN"
+
+SSLCipherSuite: "ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM"
+
+ssl_protocol: "ssl_protocols TLSv1.2 TLSv1.1 TLSv1"
+
+
+Directory_list: "Options FollowSymLinks"

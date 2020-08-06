@@ -1,0 +1,43 @@
+---
+
+- name: Ensure Apache is installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ __apache_packages }}"
+  tags: httpd
+
+- name: stat directories if they exist
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - /var/www/html/internal
+    - /var/www/html/external
+    - /var/www/html/cached
+  register: stat
+
+#- debug var=myvar.results
+
+- name: create directory if they don't exist
+  file:
+    path: "{{ item.invocation.module_args.path }}"
+    state: directory
+    owner: apache
+    group: apache
+    mode: 0755
+  with_items: "{{ stat.results }}"
+
+- name: Copy multiple files into document root
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{item.mode}}"
+  with_items:
+     - { src: 'internal.html',dest: '/var/www/html/internal/index.html', mode: '0644'}
+     - { src: 'external.html',dest: '/var/www/html/external/index.html', mode: '0644'}
+     - { src: 'cached.html',dest: '/var/www/html/cached/index.html', mode: '0644'}
+
+- name: copy apache config file
+  template:
+        src: httpd.conf.j2
+        dest: '{{ apache_confg_file_path }}'
