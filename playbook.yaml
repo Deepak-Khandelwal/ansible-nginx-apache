@@ -16,3 +16,20 @@
   hosts: web
   roles:
    - role: 'ansible-nginx'
+
+
+- name: Tomcat installation
+  become: true
+  become_method: sudo
+  hosts: web
+  roles:
+   - role: 'ansible-tomcat'
+
+
+- name: Add user
+  become: true
+  become_method: sudo
+  hosts: web
+  roles:
+   - role: 'add_user'
+

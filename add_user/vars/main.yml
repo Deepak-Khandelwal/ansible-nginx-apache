@@ -1,0 +1,10 @@
+---
+# vars file for add_user
+user_name: 
+     - devops
+     - ansible
+     - tomcat
+user_password: 
+     - #2z2prYY9
+     - #1z1pryy9
+     - #3z3prYY9

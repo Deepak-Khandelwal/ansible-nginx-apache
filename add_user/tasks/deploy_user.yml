@@ -1,0 +1,32 @@
+---
+
+- name: Add a new user named {{ user_name }}
+  user:
+      name={{ user_name }}
+      state=present
+      shell=/bin/bash
+      password={{ user_password }}
+
+- name: Add {{ user_name }} user to the sudoers
+  copy:
+      dest: "/etc/sudoers.d/{{ user_name }}"
+      content: "{{ user_name }}  ALL=(ALL)  NOPASSWD: ALL"
+
+
+- name: update authorized key for a user
+  authorized_key:
+           user={{ user_name }}
+           state=present
+           key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+
+- name: Disable Password Authentication
+  lineinfile:
+         dest=/etc/ssh/sshd_config
+         regexp='^PasswordAuthentication'
+         line="PasswordAuthentication no"
+         state=present
+         backup=yes
+  notify:
+      - restart ssh
+
