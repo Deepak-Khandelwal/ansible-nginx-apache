@@ -1,6 +1,6 @@
 ---
 # tasks file for ansible-nginx
-- include_tasks: nginx.yml
+- include_tasks: nginx_AMI.yml
 
 - name: Ensure nginx service is running as configured.
   service:

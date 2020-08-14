@@ -1,0 +1,41 @@
+---
+
+
+- name: Install nginx
+  command: amazon-linux-extras install nginx1.12 -y
+  register: command
+
+- name: Copy nginx.conf file 
+  copy:
+    src: nginx.conf
+    dest: '{{ nginx_conf_file_path }}'
+
+
+- name: copy virtual host config file
+  template:
+        src: default.conf.j2
+        dest: '{{ nginx_default_vhost_path }}'
+
+- name: Caching directories if they exist
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - /data/nginx/cache
+  register: stat
+
+- name: create caching directory if they don't exist
+  file:
+    path: "{{ item.invocation.module_args.path }}"
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: 0755
+  with_items: "{{ stat.results }}"
+
+
+#- name: notification to start nginx
+#  notify:
+#    - restart nginx
+
+#- name: install modsecurity module
+#  yum: pkg={{ nginx_modsecurity_rpm }} state=present
